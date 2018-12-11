@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Circle, Rect, RegularPolygon } from 'react-konva';
 
-const KonvaPoint = ({ x, shape }) => {
+const KonvaPoint = ({ x, shape, ...konvaProps }) => {
   let Component;
 
   switch (shape) {
@@ -18,7 +18,7 @@ const KonvaPoint = ({ x, shape }) => {
       Component = props => <Circle {...props} x={props.x + 30} y={props.y + 30} radius={30} />;
   }
 
-  return <Component fill="#aaf" x={x} y={25} draggable />;
+  return <Component {...konvaProps} fill="#aaf" x={x} y={25} draggable />;
 };
 
 KonvaPoint.propTypes = {
