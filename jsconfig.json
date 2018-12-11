@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "target": "es2017",
+    "allowSyntheticDefaultImports": false,
+    "baseUrl": "./",
+    "paths": {
+      "src/*": ["./src/*"],
+      "classes/*": ["./src/classes/*"],
+      "modules/*": ["./src/modules/*"],
+      "hocs/*": ["./src/hocs/*"],
+      "utils/*": ["./src/utils/*"],
+      "ui-components/*": ["./src/modules/UI/components*"],
+      "ui-widgets/*": ["./src/modules/UI/widgets*"]
+    }
+  },
+  "exclude": ["node_modules", "dist"]
+}
