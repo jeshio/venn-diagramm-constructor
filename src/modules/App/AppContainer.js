@@ -4,10 +4,14 @@ import { connect } from 'react-redux';
 import * as Components from './components';
 
 export class AppContainer extends Component {
-  static propTypes = {};
+  static propTypes = {
+    children: PropTypes.node.isRequired,
+  };
 
   render() {
-    return <Components.App />;
+    const { children } = this.props;
+
+    return <Components.App topBarComponent={<Components.TopBar />} content={children} />;
   }
 }
 
