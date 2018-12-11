@@ -1,8 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-const Builder = props => <div>builder</div>;
+const Builder = ({ formComponent }) => (
+  <div>
+    <h1>Конструктор</h1>
 
-Builder.propTypes = {};
+    {formComponent}
+  </div>
+);
+
+Builder.propTypes = {
+  formComponent: PropTypes.node.isRequired,
+};
 
 export default Builder;

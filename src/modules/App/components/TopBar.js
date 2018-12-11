@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { Link, List } from 'ui-components';
 import styles from './topBar.module.scss';
 
