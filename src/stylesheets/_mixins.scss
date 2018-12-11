@@ -1,0 +1,21 @@
+@mixin backdrop-content() {
+  position: relative;
+  z-index: 1;
+
+  &::before {
+    bottom: 0;
+    content: '';
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    z-index: -1;
+    @content;
+  }
+}
+
+@mixin backdrop($color, $opacity) {
+  @include backdrop-content() {
+    background-color: rgba($color, $opacity);
+  }
+}

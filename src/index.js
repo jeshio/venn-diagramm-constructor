@@ -5,7 +5,7 @@ import { ConnectedRouter } from 'connected-react-router';
 import store, { history } from './store';
 import routes from './routes';
 import * as serviceWorker from './serviceWorker';
-import './stylesheets/index.scss';
+import './stylesheets/global.scss';
 
 const target = document.querySelector('#root');
 

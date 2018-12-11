@@ -1,0 +1,27 @@
+@import 'index';
+@import 'utilities';
+
+* {
+  font-family: 'Segoe UI';
+}
+
+html,
+body {
+  background-color: $color-primary-bg;
+  color: $color-dark-text;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+#root {
+  height: 100%;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  margin: 0;
+  padding: 0;
+}

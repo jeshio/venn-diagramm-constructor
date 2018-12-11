@@ -1,0 +1,39 @@
+.u-hide {
+  display: none !important;
+}
+
+.u-hide-large {
+  @include bp(large) {
+    display: none !important;
+  }
+}
+
+.u-show-large {
+  @media only screen and (min-width: $breakpoint-large-default) {
+    display: none !important;
+  }
+}
+
+.u-hide-medium {
+  @include bp(medium) {
+    display: none !important;
+  }
+}
+
+.u-show-medium {
+  @media only screen and (min-width: $breakpoint-medium-default) {
+    display: none !important;
+  }
+}
+
+.u-hide-small {
+  @include bp(small) {
+    display: none !important;
+  }
+}
+
+.u-show-small {
+  @media only screen and (min-width: $breakpoint-small-default) {
+    display: none !important;
+  }
+}
