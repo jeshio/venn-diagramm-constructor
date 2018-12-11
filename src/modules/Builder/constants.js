@@ -1,3 +1,5 @@
+export const NAME = 'Builder';
+
 export const POINT_SHAPES = [
   {
     title: 'Круг',

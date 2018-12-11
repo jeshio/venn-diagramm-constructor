@@ -1,8 +1,8 @@
 import { combineReducers } from 'redux';
 import { reducer as formReducer } from 'redux-form';
-import { store as appStore } from 'modules/App';
+import * as builderStore from 'modules/Builder/store';
 
 export default combineReducers({
   form: formReducer,
-  // app: appStore.reducers,
+  builder: builderStore.reducer,
 });
