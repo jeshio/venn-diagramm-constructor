@@ -1,6 +1,11 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { unregisterField as reduxFormUnregisterField, submit as reduxFormSubmit } from 'redux-form';
+import {
+  getFormValues,
+  unregisterField as reduxFormUnregisterField,
+  submit as reduxFormSubmit,
+  getFormSyncErrors,
+} from 'redux-form';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as Components from './components';
@@ -18,6 +23,7 @@ export class BuilderContainer extends Component {
     submit: PropTypes.func.isRequired,
     // selectors
     points: PropTypes.arrayOf(PropTypes.object).isRequired,
+    formHasErrors: PropTypes.bool.isRequired,
   };
 
   static FORM_NAME = 'BUILDER_FORM';
@@ -37,11 +43,23 @@ export class BuilderContainer extends Component {
   }
 
   onSubmitForm(values) {
-    const { onSubmitForm } = this.props;
+    const { setSets, setPoints, formHasErrors } = this.props;
+
+    if (formHasErrors) return null;
+
+    setSets(values.sets);
+
+    const points = Object.keys(values.points).map(id => ({ id, ...values.points[id] }));
+
+    setPoints(points);
+
+    return true;
   }
 
   render() {
-    const { addPoint, points, submit } = this.props;
+    const {
+      addPoint, points, submit, formHasErrors, formValues,
+    } = this.props;
     return (
       <Components.Builder
         formComponent={(
@@ -55,9 +73,11 @@ export class BuilderContainer extends Component {
             pointColors={POINT_COLORS}
             pointShapes={POINT_SHAPES}
             points={points}
+            formValues={formValues}
           />
 )}
         submitForm={submit}
+        formHasErrors={formHasErrors}
       />
     );
   }
@@ -67,6 +87,8 @@ const mapStateToProps = (state) => {
   const moduleSelectors = builderStore.selectors(state);
   return {
     ...moduleSelectors,
+    formValues: getFormValues(BuilderContainer.FORM_NAME)(state),
+    formHasErrors: Object.keys(getFormSyncErrors(BuilderContainer.FORM_NAME)(state)).length > 0,
   };
 };
 

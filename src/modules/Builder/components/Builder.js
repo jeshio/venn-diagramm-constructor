@@ -2,19 +2,22 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Button } from 'ui-components';
 
-const Builder = ({ formComponent, submitForm }) => (
+const Builder = ({ formComponent, submitForm, formHasErrors }) => (
   <div>
     <h1>Конструктор</h1>
 
     {formComponent}
 
-    <Button onClick={submitForm}>Запустить задание</Button>
+    <Button onClick={submitForm} disabled={formHasErrors}>
+      Запустить задание
+    </Button>
   </div>
 );
 
 Builder.propTypes = {
   submitForm: PropTypes.func.isRequired,
   formComponent: PropTypes.node.isRequired,
+  formHasErrors: PropTypes.bool.isRequired,
 };
 
 export default Builder;

@@ -30,7 +30,7 @@ class Select extends PureComponent {
     } = this.props;
     return (
       <select {...props} {...input}>
-        <option>{placeholder}</option>
+        <option value="">{placeholder}</option>
         {items.map(({ title, value }) => (
           <option value={value} key={value}>
             {title}

@@ -6,16 +6,33 @@ import { Select } from 'ui-components';
 const formatForSelect = items => items.map(({ title, name }) => ({ title, value: name }));
 
 const FormSet = ({
-  title, pointColors, pointShapes, sectionName,
+  title,
+  pointColors,
+  pointShapes,
+  sectionName,
+  shapeDisabled,
+  colorDisabled,
 }) => (
   <FormSection name={sectionName}>
     {title}
-    <Select name="shape" placeholder="Форма" items={formatForSelect(pointShapes)} />
-    <Select name="color" placeholder="Цвет" items={formatForSelect(pointColors)} />
+    <Select
+      name="shape"
+      disabled={shapeDisabled}
+      placeholder="Форма"
+      items={formatForSelect(pointShapes)}
+    />
+    <Select
+      name="color"
+      disabled={colorDisabled}
+      placeholder="Цвет"
+      items={formatForSelect(pointColors)}
+    />
   </FormSection>
 );
 
 FormSet.propTypes = {
+  shapeDisabled: PropTypes.bool.isRequired,
+  colorDisabled: PropTypes.bool.isRequired,
   sectionName: PropTypes.string.isRequired,
   title: PropTypes.string.isRequired,
   pointShapes: PropTypes.arrayOf(
