@@ -24,6 +24,11 @@ export class BuilderContainer extends Component {
     // selectors
     points: PropTypes.arrayOf(PropTypes.object).isRequired,
     formHasErrors: PropTypes.bool.isRequired,
+    formValues: PropTypes.shape({}),
+  };
+
+  static defaultProps = {
+    formValues: {},
   };
 
   static FORM_NAME = 'BUILDER_FORM';
@@ -49,7 +54,7 @@ export class BuilderContainer extends Component {
 
     setSets(values.sets);
 
-    const points = Object.keys(values.points).map(id => ({ id, ...values.points[id] }));
+    const points = Object.keys(values.points || {}).map(id => ({ id, ...values.points[id] }));
 
     setPoints(points);
 

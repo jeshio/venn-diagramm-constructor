@@ -3,6 +3,14 @@ import PropTypes from 'prop-types';
 import { tryFunc } from 'utils';
 import { Form as UIForm, Button } from 'ui-components';
 
+const fieldOfSetIsDisabled = (selfChecker, anotherChecker) => !!tryFunc(selfChecker) || !!tryFunc(anotherChecker);
+
+const validation = {
+  sets: sets => !sets
+    || !tryFunc(() => sets.leftSet.shape || sets.leftSet.color)
+    || !tryFunc(() => sets.rightSet.shape || sets.rightSet.color),
+};
+
 const Form = ({
   onAddPoint,
   onRemovePoint,
@@ -16,25 +24,28 @@ const Form = ({
   formValues,
 }) => {
   const leftSetDisabledFields = {
-    shape:
-      !!tryFunc(() => formValues.sets.leftSet.color)
-      || !!tryFunc(() => formValues.sets.rightSet.shape),
-    color:
-      !!tryFunc(() => formValues.sets.leftSet.shape)
-      || !!tryFunc(() => formValues.sets.rightSet.color),
+    shape: fieldOfSetIsDisabled(
+      () => formValues.sets.leftSet.color,
+      () => formValues.sets.rightSet.shape,
+    ),
+    color: fieldOfSetIsDisabled(
+      () => formValues.sets.leftSet.shape,
+      () => formValues.sets.rightSet.color,
+    ),
   };
   const rightSetDisabledFields = {
-    shape:
-      !!tryFunc(() => formValues.sets.rightSet.color)
-      || !!tryFunc(() => formValues.sets.leftSet.shape),
-    color:
-      !!tryFunc(() => formValues.sets.rightSet.shape)
-      || !!tryFunc(() => formValues.sets.leftSet.color),
+    shape: fieldOfSetIsDisabled(
+      () => formValues.sets.rightSet.color,
+      () => formValues.sets.leftSet.shape,
+    ),
+    color: fieldOfSetIsDisabled(
+      () => formValues.sets.rightSet.shape,
+      () => formValues.sets.leftSet.color,
+    ),
   };
-  console.log(leftSetDisabledFields, rightSetDisabledFields);
 
   return (
-    <UIForm name={formName} onSubmit={onSubmitForm}>
+    <UIForm name={formName} onSubmit={onSubmitForm} validation={validation}>
       <div>
         {points.map(point => (
           <PointComponent
