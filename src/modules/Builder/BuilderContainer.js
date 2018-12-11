@@ -13,6 +13,10 @@ import { POINT_SHAPES, POINT_COLORS } from './constants';
 import * as builderStore from './store';
 
 export class BuilderContainer extends Component {
+  static contextTypes = {
+    router: PropTypes.shape({}),
+  };
+
   static propTypes = {
     // actions
     addPoint: PropTypes.func.isRequired,
@@ -49,6 +53,7 @@ export class BuilderContainer extends Component {
 
   onSubmitForm(values) {
     const { setSets, setPoints, formHasErrors } = this.props;
+    const { router } = this.context;
 
     if (formHasErrors) return null;
 
@@ -57,6 +62,8 @@ export class BuilderContainer extends Component {
     const points = Object.keys(values.points || {}).map(id => ({ id, ...values.points[id] }));
 
     setPoints(points);
+
+    router.history.push('/stage');
 
     return true;
   }
