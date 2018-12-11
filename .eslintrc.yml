@@ -1,0 +1,30 @@
+extends: airbnb
+env:
+  node: true
+  browser: true
+parser: babel-eslint
+rules:
+  react/jsx-filename-extension: 0
+  import/prefer-default-export: 0
+  react/prefer-stateless-function: 0
+  jsx-a11y/label-has-for: 0
+  jsx-a11y/anchor-is-valid: 0
+  react/prop-types:
+    - 2
+    - ignore:
+        - className
+plugins:
+  - import
+  - react
+settings: 
+  import/resolver: 
+    node: 
+      paths:
+        - src
+        - modules
+        - classes
+        - ui-components
+        - ui-widgets
+        - pages
+        - hocs
+        - utils

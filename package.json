@@ -5,8 +5,9 @@
   "license": "MIT",
   "dependencies": {
     "classnames": "^2.2.6",
-    "connected-react-router": "^6.0.0",
+    "connected-react-router": "^4.5.0",
     "customize-cra": "^0.2.7",
+    "history": "^4.7.2",
     "lodash": "^4.17.11",
     "node-sass": "^4.11.0",
     "prop-types": "^15.6.2",
@@ -14,7 +15,7 @@
     "react-app-rewired": "^1.6.2",
     "react-dom": "^16.6.3",
     "react-loadable": "^5.5.0",
-    "react-redux": "^6.0.0",
+    "react-redux": "5.1.1",
     "react-router-dom": "^4.3.1",
     "react-scripts": "2.1.1",
     "recompose": "^0.30.0",
@@ -23,8 +24,14 @@
     "redux-form": "^7.4.2",
     "redux-logger": "^3.0.6"
   },
+  "devDependencies": {
+    "eslint-config-airbnb": "^17.1.0",
+    "eslint-plugin-import": "^2.14.0",
+    "eslint-plugin-jsx-a11y": "^6.1.2",
+    "eslint-plugin-react": "^7.11.1"
+  },
   "scripts": {
-    "start": "react-app-rewired start",
+    "start": "BROWSER=none react-app-rewired start",
     "build": "react-app-rewired build",
     "test": "react-app-rewired test",
     "eject": "react-scripts eject"
@@ -37,11 +44,5 @@
     "not dead",
     "not ie <= 11",
     "not op_mini all"
-  ],
-  "peerDependencies": {
-    "eslint-config-airbnb": "^17.1.0",
-    "eslint-plugin-import": "^2.14.0",
-    "eslint-plugin-jsx-a11y": "^6.1.2",
-    "eslint-plugin-react": "^7.11.1"
-  }
+  ]
 }
