@@ -16,6 +16,8 @@ import * as Components from './components';
 
 export class StageContainer extends Component {
   static propTypes = {
+    isPreview: PropTypes.bool,
+    previewPoints: PropTypes.arrayOf(PropTypes.object),
     // actions
     setPointsPositions: PropTypes.func.isRequired,
     setPointPosition: PropTypes.func.isRequired,
@@ -28,6 +30,8 @@ export class StageContainer extends Component {
   };
 
   static defaultProps = {
+    previewPoints: [],
+    isPreview: false,
     sets: {
       leftSet: {
         shape: 'circle',
@@ -62,6 +66,14 @@ export class StageContainer extends Component {
     const { setPointsPositions, points } = this.props;
     setPointsPositions(this.generatePointsPositions(points));
   };
+
+  shouldComponentUpdate = (nextProps) => {
+    const { previewPoints, setPointsPositions } = this.props;
+    if (nextProps.isPreview && previewPoints !== nextProps.previewPoints) {
+      setPointsPositions(this.generatePointsPositions(nextProps.previewPoints));
+    }
+    return true;
+  }
 
   onCheckClick() {
     const { pointsPositions } = this.props;
@@ -118,7 +130,7 @@ export class StageContainer extends Component {
   }
 
   render() {
-    const { pointsPositions, sets, setPointPosition } = this.props;
+    const { pointsPositions, sets, setPointPosition, isPreview } = this.props;
 
     return (
       <Components.Stage
@@ -131,6 +143,7 @@ export class StageContainer extends Component {
         onCheckClick={this.onCheckClick}
         onTestPointsClick={this.onTestPointsClick}
         setPointPosition={setPointPosition}
+        isPreview={isPreview}
       />
     );
   }

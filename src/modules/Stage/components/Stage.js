@@ -1,5 +1,6 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
+import classnames from 'classnames';
 import { isIntersectWithCircle } from 'helpers';
 import { Button } from 'ui-components';
 import { SetsStage, KonvaPoint } from 'ui-widgets';
@@ -7,6 +8,7 @@ import styles from './stage.module.scss';
 
 export default class Stage extends PureComponent {
   static propTypes = {
+    isPreview: PropTypes.bool.isRequired,
     checkPoint: PropTypes.func.isRequired,
     onCheckClick: PropTypes.func.isRequired,
     onTestPointsClick: PropTypes.func.isRequired,
@@ -76,7 +78,7 @@ export default class Stage extends PureComponent {
       layer.draw();
       setPointPosition(point.attrs.id, point.attrs);
     });
-  };
+  };  
 
   getPointBorderColor(point) {
     const {
@@ -117,18 +119,21 @@ export default class Stage extends PureComponent {
       sets,
       onCheckClick,
       onTestPointsClick,
+      isPreview,
     } = this.props;
     return (
       <div>
-        <Button href="/" isBackButton className={styles.controlButton}>
-          Назад
-        </Button>
-        <Button className={styles.controlButton} onClick={onTestPointsClick}>
-          Установить тестовые точки
-        </Button>
-        <Button className={styles.controlButton} success onClick={onCheckClick}>
-          Проверить
-        </Button>
+        <div className={classnames({ 'u-hide': isPreview})}>
+          <Button href="/" isBackButton className={styles.controlButton}>
+            Назад
+          </Button>
+          <Button className={styles.controlButton} onClick={onTestPointsClick}>
+            Установить тестовые точки
+          </Button>
+          <Button className={styles.controlButton} success onClick={onCheckClick}>
+            Проверить
+          </Button>
+        </div>
 
         <div className={styles.stage}>
           <SetsStage
@@ -139,6 +144,7 @@ export default class Stage extends PureComponent {
             {points.map((point, index) => (
               <KonvaPoint
                 {...point}
+                isSuccess={point.isSuccess || isPreview}
                 key={index}
                 id={point.id}
                 color={point.color}

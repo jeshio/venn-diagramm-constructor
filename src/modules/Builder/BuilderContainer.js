@@ -6,6 +6,7 @@ import {
   submit as reduxFormSubmit,
   getFormSyncErrors,
 } from 'redux-form';
+import { StageContainer } from 'modules/Stage';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as Components from './components';
@@ -42,6 +43,24 @@ export class BuilderContainer extends Component {
     this.onRemovePoint = this.onRemovePoint.bind(this);
     this.onSubmitForm = this.onSubmitForm.bind(this);
   }
+
+  shouldComponentUpdate = (nextProps) => {
+    const { formValues, setSets, setPoints } = this.props;
+
+    if (JSON.stringify(formValues) !== JSON.stringify(nextProps.formValues)) {
+      const values = nextProps.formValues;
+
+      if (values.sets && values.sets.leftSet && values.sets.rightSet) {
+        setSets(values.sets.leftSet, values.sets.rightSet);
+      }
+
+      const points = Object.keys(values.points || {}).map(id => ({ id, ...values.points[id] }));
+
+      setPoints(points);
+    }
+
+    return true;
+  };
 
   onRemovePoint(id) {
     const { removePoint, removeFormValue } = this.props;
@@ -90,6 +109,7 @@ export class BuilderContainer extends Component {
 )}
         submitForm={submit}
         formHasErrors={formHasErrors}
+        stageContainerComponent={<StageContainer isPreview previewPoints={points} />}
       />
     );
   }
