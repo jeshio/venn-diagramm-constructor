@@ -11,7 +11,7 @@ const FormPoint = ({
   <FormSection name={sectionName}>
     <Select name="shape" placeholder="Форма" items={formatForSelect(pointShapes)} value={shape} />
     <Select name="color" placeholder="Цвет" items={formatForSelect(pointColors)} value={color} />
-    <Checkbox name="isSuccess">уже решён</Checkbox>
+    <Checkbox name="isSuccess">уже определён</Checkbox>
     <Button onClick={() => onRemovePoint(id)}>x</Button>
   </FormSection>
 );

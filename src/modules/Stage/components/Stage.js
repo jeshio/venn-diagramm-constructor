@@ -22,6 +22,7 @@ export default class Stage extends PureComponent {
         y: PropTypes.number,
       }),
     ).isRequired,
+    scaleMultiplier: PropTypes.number.isRequired,
   };
 
   static getSetParams({ radius, x, y }) {
@@ -47,7 +48,9 @@ export default class Stage extends PureComponent {
   };
 
   render() {
-    const { leftSetParams, rightSetParams, points } = this.props;
+    const {
+      leftSetParams, rightSetParams, points, scaleMultiplier,
+    } = this.props;
     return (
       <div>
         <Button href="/" isBackButton>
@@ -59,8 +62,16 @@ export default class Stage extends PureComponent {
           leftSetParams={leftSetParams}
           rightSetParams={rightSetParams}
         >
-          {points.map(({ x, y }, index) => (
-            <KonvaPoint key={index} id={index} shape="triangle" x={x} y={y} scaleMultiplier={0.1} />
+          {points.map(({ x, y, shape, color }, index) => (
+            <KonvaPoint
+              key={index}
+              id={index}
+              color={color}
+              shape={shape}
+              x={x}
+              y={y}
+              scaleMultiplier={scaleMultiplier}
+            />
           ))}
         </SetsStage>
       </div>
