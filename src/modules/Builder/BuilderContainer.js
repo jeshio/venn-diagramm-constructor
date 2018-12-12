@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import {
   getFormValues,
-  unregisterField as reduxFormUnregisterField,
+  clearFields,
   submit as reduxFormSubmit,
   getFormSyncErrors,
 } from 'redux-form';
@@ -23,7 +23,7 @@ export class BuilderContainer extends Component {
     removePoint: PropTypes.func.isRequired,
     setSets: PropTypes.func.isRequired,
     setPoints: PropTypes.func.isRequired,
-    unregisterField: PropTypes.func.isRequired,
+    removeFormValue: PropTypes.func.isRequired,
     submit: PropTypes.func.isRequired,
     // selectors
     points: PropTypes.arrayOf(PropTypes.object).isRequired,
@@ -44,11 +44,11 @@ export class BuilderContainer extends Component {
   }
 
   onRemovePoint(id) {
-    const { unregisterField, removePoint } = this.props;
+    const { removePoint, removeFormValue } = this.props;
 
     removePoint(id);
 
-    unregisterField(`points[${id}]`);
+    removeFormValue(`points.${id}`);
   }
 
   onSubmitForm(values) {
@@ -107,7 +107,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = dispatch => bindActionCreators(
   {
     ...builderStore.actions,
-    unregisterField: field => reduxFormUnregisterField(BuilderContainer.FORM_NAME, field),
+    removeFormValue: field => clearFields(BuilderContainer.FORM_NAME, false, false, [field]),
     submit: () => reduxFormSubmit(BuilderContainer.FORM_NAME),
   },
   dispatch,
