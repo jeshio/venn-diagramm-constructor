@@ -7,7 +7,7 @@ import { Link } from '.';
 
 /* eslint-disable react/button-has-type */
 const Button = ({
-  href, type, secondary, isBackLink, isBackButton, ...props
+  href, type, success, danger, isBackLink, isBackButton, ...props
 }) => (href || isBackLink || isBackButton ? (
   <Link {...props} isBackLink={isBackLink || isBackButton} href={href} />
 ) : (
@@ -16,7 +16,6 @@ const Button = ({
 
 Button.propTypes = {
   type: PropTypes.oneOf(['button', 'submit', 'reset']),
-  secondary: PropTypes.bool,
   className: PropTypes.string,
   isBackLink: PropTypes.bool,
   isBackButton: PropTypes.bool,
@@ -24,13 +23,13 @@ Button.propTypes = {
 
 Button.defaultProps = {
   type: 'button',
-  secondary: false,
   className: '',
   isBackLink: false,
   isBackButton: false,
 };
 
 export default compose(
-  classNameByProp(styles.secondary, 'secondary'),
+  classNameByProp(styles.success, 'success'),
+  classNameByProp(styles.danger, 'danger'),
   addClassName(styles.self),
 )(Button);

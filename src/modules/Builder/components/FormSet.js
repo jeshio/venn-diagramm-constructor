@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { FormSection } from 'redux-form';
 import { Select } from 'ui-components';
+import styles from './formSet.module.scss';
 
 const formatForSelect = items => items.map(({ title, name }) => ({ title, value: name }));
 
@@ -13,20 +14,24 @@ const FormSet = ({
   shapeDisabled,
   colorDisabled,
 }) => (
-  <FormSection name={sectionName}>
+  <FormSection name={sectionName} className={styles.self}>
     {title}
-    <Select
-      name="shape"
-      disabled={shapeDisabled}
-      placeholder="Форма"
-      items={formatForSelect(pointShapes)}
-    />
-    <Select
-      name="color"
-      disabled={colorDisabled}
-      placeholder="Цвет"
-      items={formatForSelect(pointColors)}
-    />
+    <div>
+      <Select
+        name="shape"
+        disabled={shapeDisabled}
+        placeholder="Форма"
+        items={formatForSelect(pointShapes)}
+        className={styles.select}
+      />
+      <Select
+        name="color"
+        disabled={colorDisabled}
+        placeholder="Цвет"
+        items={formatForSelect(pointColors)}
+        className={styles.select}
+      />
+    </div>
   </FormSection>
 );
 

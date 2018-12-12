@@ -24,10 +24,10 @@ export default class Checkbox extends PureComponent {
     const { id } = this.state;
 
     return (
-      <div>
+      <span>
         <Input {...props} id={id} type="checkbox" />
         <label htmlFor={id}>{children}</label>
-      </div>
+      </span>
     );
   }
 }

@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { isIntersectWithCircle } from 'helpers';
 import { Button } from 'ui-components';
 import { SetsStage, KonvaPoint } from 'ui-widgets';
+import styles from './stage.module.scss';
 
 export default class Stage extends PureComponent {
   static propTypes = {
@@ -66,6 +67,7 @@ export default class Stage extends PureComponent {
 
       const pointerPosition = stage.getPointerPosition();
       const point = layer.getIntersection(pointerPosition);
+      if (!point) return;
 
       const bordersColor = this.getPointBorderColor(point.attrs);
 
@@ -118,30 +120,37 @@ export default class Stage extends PureComponent {
     } = this.props;
     return (
       <div>
-        <Button href="/" isBackButton>
+        <Button href="/" isBackButton className={styles.controlButton}>
           Назад
         </Button>
-        <Button onClick={onTestPointsClick}>Установить тестовые точки</Button>
-        <Button onClick={onCheckClick}>Проверить</Button>
+        <Button className={styles.controlButton} onClick={onTestPointsClick}>
+          Установить тестовые точки
+        </Button>
+        <Button className={styles.controlButton} success onClick={onCheckClick}>
+          Проверить
+        </Button>
 
-        <SetsStage
-          forwardedRef={this.stage}
-          leftSetParams={{ ...leftSetParams, ...sets.leftSet }}
-          rightSetParams={{ ...rightSetParams, ...sets.rightSet }}
-        >
-          {points.map((point, index) => (
-            <KonvaPoint
-              key={index}
-              id={point.id}
-              color={point.color}
-              bordersColor={this.getPointBorderColor(point)}
-              shape={point.shape}
-              x={point.x}
-              y={point.y}
-              scaleMultiplier={scaleMultiplier}
-            />
-          ))}
-        </SetsStage>
+        <div className={styles.stage}>
+          <SetsStage
+            forwardedRef={this.stage}
+            leftSetParams={{ ...leftSetParams, ...sets.leftSet }}
+            rightSetParams={{ ...rightSetParams, ...sets.rightSet }}
+          >
+            {points.map((point, index) => (
+              <KonvaPoint
+                {...point}
+                key={index}
+                id={point.id}
+                color={point.color}
+                bordersColor={this.getPointBorderColor(point)}
+                shape={point.shape}
+                x={point.x}
+                y={point.y}
+                scaleMultiplier={scaleMultiplier}
+              />
+            ))}
+          </SetsStage>
+        </div>
       </div>
     );
   }

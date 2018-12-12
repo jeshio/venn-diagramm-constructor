@@ -1,11 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import styles from './app.module.scss';
 
 const App = ({ topBarComponent, content }) => (
-  <div>
+  <div className={styles.self}>
     {topBarComponent}
 
-    <main>{content}</main>
+    <main className={styles.content}>{content}</main>
   </div>
 );
 

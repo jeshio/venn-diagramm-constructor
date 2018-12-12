@@ -1,5 +1,7 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
+import { addClassName } from 'hocs';
+import styles from './select.module.scss';
 import { ReduxField } from '.';
 
 class Select extends PureComponent {
@@ -17,6 +19,7 @@ class Select extends PureComponent {
     ).isRequired,
     placeholder: PropTypes.string,
     setError: PropTypes.func,
+    className: PropTypes.string.isRequired,
   };
 
   static defaultProps = {
@@ -26,10 +29,10 @@ class Select extends PureComponent {
 
   render() {
     const {
-      input, items, placeholder, setError, ...props
+      input, items, placeholder, setError, className, ...props
     } = this.props;
     return (
-      <select {...props} {...input}>
+      <select {...props} {...input} className={className}>
         <option value="">{placeholder}</option>
         {items.map(({ title, value }) => (
           <option value={value} key={value}>
@@ -41,4 +44,4 @@ class Select extends PureComponent {
   }
 }
 
-export default props => <ReduxField {...props} Component={Select} />;
+export default addClassName(styles.self)(props => <ReduxField {...props} Component={Select} />);

@@ -1,7 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { tryFunc } from 'utils';
+import classnames from 'classnames';
 import { Form as UIForm, Button } from 'ui-components';
+import styles from './form.module.scss';
 
 const fieldOfSetIsDisabled = (selfChecker, anotherChecker) => !!tryFunc(selfChecker) || !!tryFunc(anotherChecker);
 
@@ -46,7 +48,7 @@ const Form = ({
 
   return (
     <UIForm name={formName} onSubmit={onSubmitForm} validation={validation}>
-      <div>
+      <div className={styles.section}>
         {points.map(point => (
           <PointComponent
             {...point}
@@ -56,10 +58,15 @@ const Form = ({
             onRemovePoint={onRemovePoint}
           />
         ))}
-        <Button onClick={onAddPoint}>Добавить</Button>
+        <div className={classnames(styles.emptyList, { 'u-hide': points.length > 0 })}>
+          Список фигур пуст.
+        </div>
+        <Button onClick={onAddPoint} className={styles.addPointButton}>
+          Добавить
+        </Button>
       </div>
 
-      <div>
+      <div className={styles.section}>
         <SetComponent
           sectionName="sets[leftSet]"
           title="Левое множество"

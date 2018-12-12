@@ -8,7 +8,7 @@ const Builder = ({ formComponent, submitForm, formHasErrors }) => (
 
     {formComponent}
 
-    <Button onClick={submitForm} disabled={formHasErrors}>
+    <Button onClick={submitForm} disabled={formHasErrors} success>
       Запустить задание
     </Button>
   </div>
