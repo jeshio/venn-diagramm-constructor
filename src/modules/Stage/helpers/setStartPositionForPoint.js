@@ -1,19 +1,19 @@
+import { checkPoint } from '.';
+
 const randomIndex = arrayLength => Math.ceil(Math.random() * (arrayLength - 1));
 
 export default (point, sets, positions) => {
   let position;
-  const shapeLeftSet = point.shape === sets.leftSet.shape;
-  const shapeRightSet = point.shape === sets.rightSet.shape;
-  const colorLeftSet = point.color === sets.leftSet.color;
-  const colorRightSet = point.color === sets.rightSet.color;
+
+  const checkedPoint = checkPoint(point, sets);
 
   if (true) {
     // point.isSuccess) {
-    if ((shapeLeftSet && colorRightSet) || (colorLeftSet && shapeRightSet)) {
+    if (checkedPoint === 2) {
       position = { ...positions.setsIntersect[randomIndex(positions.setsIntersect.length)] };
-    } else if (shapeLeftSet || colorLeftSet) {
+    } else if (checkedPoint === 0) {
       position = { ...positions.leftSet[randomIndex(positions.leftSet.length)] };
-    } else if (shapeRightSet || shapeRightSet) {
+    } else if (checkedPoint === 1) {
       position = { ...positions.rightSet[randomIndex(positions.rightSet.length)] };
     }
   }

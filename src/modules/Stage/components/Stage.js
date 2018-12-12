@@ -6,6 +6,11 @@ import { SetsStage, KonvaPoint } from 'ui-widgets';
 
 export default class Stage extends PureComponent {
   static propTypes = {
+    checkPoint: PropTypes.func.isRequired,
+    sets: PropTypes.shape({
+      leftSet: PropTypes.object,
+      rightSet: PropTypes.object,
+    }).isRequired,
     leftSetParams: PropTypes.shape({
       x: PropTypes.number,
       y: PropTypes.number,
@@ -29,23 +34,65 @@ export default class Stage extends PureComponent {
     return { radius, x, y };
   }
 
+  static FAILED_COLOR = '#f44';
+
+  static SUCCESS_COLOR = '#6b6';
+
   constructor() {
     super();
     this.stage = React.createRef();
+    this.getPointBorderColor = this.getPointBorderColor.bind(this)
   }
 
   componentDidMount = () => {
-    this.stage.current.on('dragend', (evt) => {
-      const { leftSetParams, rightSetParams } = this.props;
+    this.stage.current.on('dragstart', (evt) => {
       const stage = evt.target.getStage();
       const layer = evt.target.getLayer();
+
       const pointerPosition = stage.getPointerPosition();
       const point = layer.getIntersection(pointerPosition);
+      if (!point) return;
+      point.strokeWidth(0);
+      layer.draw();
+    });
 
-      const intersectWithLeftSet = isIntersectWithCircle(point.attrs, leftSetParams);
-      const intersectWithRightSet = isIntersectWithCircle(point.attrs, rightSetParams);
+    this.stage.current.on('dragend', (evt) => {
+      const stage = evt.target.getStage();
+      const layer = evt.target.getLayer();
+
+      const pointerPosition = stage.getPointerPosition();
+      const point = layer.getIntersection(pointerPosition);
+      
+      const bordersColor = this.getPointBorderColor(point.attrs);
+
+      point.stroke(bordersColor);
+      point.strokeWidth(3);
+      layer.draw();
     });
   };
+
+  getPointBorderColor(point) {
+    const { sets, leftSetParams, rightSetParams, checkPoint } = this.props;
+    const checkedPoint = checkPoint(point, sets);
+
+    const intersectWithLeftSet = isIntersectWithCircle(point, leftSetParams);
+    const intersectWithRightSet = isIntersectWithCircle(point, rightSetParams);
+
+    let bordersColor = Stage.FAILED_COLOR;
+
+    const successWith = {
+      intersect: checkedPoint === 2 && intersectWithLeftSet && intersectWithRightSet,
+      rightSet: checkedPoint === 1 && intersectWithRightSet && !intersectWithLeftSet,
+      leftSet: checkedPoint === 0 && intersectWithLeftSet && !intersectWithRightSet,
+      outside: checkedPoint === -1 && !intersectWithLeftSet && !intersectWithRightSet,
+    }
+
+    if (successWith.intersect || successWith.leftSet || successWith.rightSet || successWith.outside) {
+      bordersColor = Stage.SUCCESS_COLOR;
+    }
+
+    return bordersColor;
+  }
 
   render() {
     const {
@@ -62,14 +109,15 @@ export default class Stage extends PureComponent {
           leftSetParams={leftSetParams}
           rightSetParams={rightSetParams}
         >
-          {points.map(({ x, y, shape, color }, index) => (
+          {points.map((point, index) => (
             <KonvaPoint
               key={index}
               id={index}
-              color={color}
-              shape={shape}
-              x={x}
-              y={y}
+              color={point.color}
+              bordersColor={this.getPointBorderColor(point)}
+              shape={point.shape}
+              x={point.x}
+              y={point.y}
               scaleMultiplier={scaleMultiplier}
             />
           ))}

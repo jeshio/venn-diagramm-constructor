@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as builderStore from 'modules/Builder/store';
-import { generatePositions, setStartPositionForPoint } from './helpers/index';
+import { generatePositions, setStartPositionForPoint, checkPoint } from './helpers/index';
 import * as stageStore from './store';
 import * as Components from './components';
 
@@ -81,12 +81,23 @@ export class StageContainer extends Component {
   render() {
     const { pointsPositions } = this.props;
     const { scaleMultiplier } = this.state;
+    const sets = {
+      leftSet: {
+        shape: 'circle',
+      },
+      rightSet: {
+        color: 'red',
+      },
+    };
+
     return (
       <Components.Stage
+        sets={sets}
         leftSetParams={StageContainer.leftSetParams}
         rightSetParams={StageContainer.rightSetParams}
         points={pointsPositions}
         scaleMultiplier={scaleMultiplier}
+        checkPoint={checkPoint}
       />
     );
   }
