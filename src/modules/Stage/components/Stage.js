@@ -1,11 +1,11 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
+import { isIntersectWithCircle } from 'helpers';
 import { Button } from 'ui-components';
 import { SetsStage, KonvaPoint } from 'ui-widgets';
 
 export default class Stage extends PureComponent {
   static propTypes = {
-    isIntersect: PropTypes.func.isRequired,
     leftSetParams: PropTypes.shape({
       x: PropTypes.number,
       y: PropTypes.number,
@@ -16,6 +16,12 @@ export default class Stage extends PureComponent {
       y: PropTypes.number,
       radius: PropTypes.number,
     }).isRequired,
+    points: PropTypes.arrayOf(
+      PropTypes.shape({
+        x: PropTypes.number,
+        y: PropTypes.number,
+      }),
+    ).isRequired,
   };
 
   static getSetParams({ radius, x, y }) {
@@ -29,19 +35,19 @@ export default class Stage extends PureComponent {
 
   componentDidMount = () => {
     this.stage.current.on('dragend', (evt) => {
-      const { leftSetParams, rightSetParams, isIntersect } = this.props;
+      const { leftSetParams, rightSetParams } = this.props;
       const stage = evt.target.getStage();
       const layer = evt.target.getLayer();
       const pointerPosition = stage.getPointerPosition();
       const point = layer.getIntersection(pointerPosition);
 
-      const intersectWithLeftSet = isIntersect(point.attrs, leftSetParams);
-      const intersectWithRightSet = isIntersect(point.attrs, rightSetParams);
+      const intersectWithLeftSet = isIntersectWithCircle(point.attrs, leftSetParams);
+      const intersectWithRightSet = isIntersectWithCircle(point.attrs, rightSetParams);
     });
   };
 
   render() {
-    const { leftSetParams, rightSetParams } = this.props;
+    const { leftSetParams, rightSetParams, points } = this.props;
     return (
       <div>
         <Button href="/" isBackButton>
@@ -53,9 +59,9 @@ export default class Stage extends PureComponent {
           leftSetParams={leftSetParams}
           rightSetParams={rightSetParams}
         >
-          <KonvaPoint id={1} shape="square" x={40} />
-          <KonvaPoint id={2} shape="circle" x={120} />
-          <KonvaPoint id={3} shape="triangle" x={200} />
+          {points.map(({ x, y }, index) => (
+            <KonvaPoint key={index} id={index} shape="triangle" x={x} y={y} scaleMultiplier={0.1} />
+          ))}
         </SetsStage>
       </div>
     );

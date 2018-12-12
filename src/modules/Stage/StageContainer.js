@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { isIntersect } from './helpers';
+import { generatePointsInCircle, generatePointsBetweenCircles } from 'helpers';
 import * as Components from './components';
 
 export class StageContainer extends Component {
@@ -25,11 +25,15 @@ export class StageContainer extends Component {
   };
 
   render() {
+    const points = generatePointsBetweenCircles(
+      StageContainer.leftSetParams,
+      StageContainer.rightSetParams,
+    );
     return (
       <Components.Stage
         leftSetParams={StageContainer.leftSetParams}
         rightSetParams={StageContainer.rightSetParams}
-        isIntersect={isIntersect}
+        points={points}
       />
     );
   }

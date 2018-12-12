@@ -2,32 +2,37 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Circle, Rect, RegularPolygon } from 'react-konva';
 
-const KonvaPoint = ({ x, shape, ...konvaProps }) => {
+const KonvaPoint = ({
+  x, y, shape, scaleMultiplier, ...konvaProps
+}) => {
   let Component;
 
   switch (shape) {
     case 'triangle':
-      Component = props => (
-        <RegularPolygon {...props} x={props.x + 30} y={props.y + 37.5} sides={3} radius={35} />
-      );
+      Component = props => <RegularPolygon {...props} sides={3} radius={35 * scaleMultiplier} />;
       break;
     case 'square':
-      Component = props => <Rect {...props} width={60} height={60} />;
+      Component = props => (
+        <Rect {...props} width={60 * scaleMultiplier} x={props.x - 30 * scaleMultiplier} y={props.y - 30 * scaleMultiplier} height={60 * scaleMultiplier} />
+      );
       break;
     default:
-      Component = props => <Circle {...props} x={props.x + 30} y={props.y + 30} radius={30} />;
+      Component = props => <Circle {...props} radius={30 * scaleMultiplier} />;
   }
 
-  return <Component {...konvaProps} fill="#aaf" x={x} y={25} draggable />;
+  return <Component {...konvaProps} fill="rgba(100, 100, 255, 0.8)" x={x} y={y} draggable />;
 };
 
 KonvaPoint.propTypes = {
   x: PropTypes.number.isRequired,
+  y: PropTypes.number.isRequired,
+  scaleMultiplier: PropTypes.number,
   shape: PropTypes.string,
 };
 
 KonvaPoint.defaultProps = {
   shape: 'circle',
+  scaleMultiplier: 1,
 };
 
 export default KonvaPoint;
