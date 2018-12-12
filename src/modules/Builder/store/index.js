@@ -5,8 +5,12 @@ import actionTypes from './actionTypes';
 export const initialState = {
   points: [],
   sets: {
-    leftSet: {},
-    rightSet: {},
+    leftSet: {
+      shape: 'circle',
+    },
+    rightSet: {
+      color: 'red',
+    },
   },
 };
 

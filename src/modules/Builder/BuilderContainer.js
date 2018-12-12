@@ -57,7 +57,7 @@ export class BuilderContainer extends Component {
 
     if (formHasErrors) return null;
 
-    setSets(values.sets);
+    setSets(values.sets.leftSet, values.sets.rightSet);
 
     const points = Object.keys(values.points || {}).map(id => ({ id, ...values.points[id] }));
 

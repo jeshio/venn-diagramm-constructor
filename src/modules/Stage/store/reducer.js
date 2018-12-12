@@ -13,8 +13,9 @@ export default (state = initialState, action) => {
         id,
         position: { x, y },
       } = action.payload;
+
       const pointsPositions = state.pointsPositions.map((pointPosition) => {
-        if (pointPosition !== id) return pointPosition;
+        if (pointPosition.id !== id) return pointPosition;
 
         return { ...pointPosition, x, y };
       });

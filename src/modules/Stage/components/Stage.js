@@ -7,6 +7,9 @@ import { SetsStage, KonvaPoint } from 'ui-widgets';
 export default class Stage extends PureComponent {
   static propTypes = {
     checkPoint: PropTypes.func.isRequired,
+    onCheckClick: PropTypes.func.isRequired,
+    onTestPointsClick: PropTypes.func.isRequired,
+    setPointPosition: PropTypes.func.isRequired,
     sets: PropTypes.shape({
       leftSet: PropTypes.object,
       rightSet: PropTypes.object,
@@ -41,7 +44,7 @@ export default class Stage extends PureComponent {
   constructor() {
     super();
     this.stage = React.createRef();
-    this.getPointBorderColor = this.getPointBorderColor.bind(this)
+    this.getPointBorderColor = this.getPointBorderColor.bind(this);
   }
 
   componentDidMount = () => {
@@ -57,22 +60,26 @@ export default class Stage extends PureComponent {
     });
 
     this.stage.current.on('dragend', (evt) => {
+      const { setPointPosition } = this.props;
       const stage = evt.target.getStage();
       const layer = evt.target.getLayer();
 
       const pointerPosition = stage.getPointerPosition();
       const point = layer.getIntersection(pointerPosition);
-      
+
       const bordersColor = this.getPointBorderColor(point.attrs);
 
       point.stroke(bordersColor);
       point.strokeWidth(3);
       layer.draw();
+      setPointPosition(point.attrs.id, point.attrs);
     });
   };
 
   getPointBorderColor(point) {
-    const { sets, leftSetParams, rightSetParams, checkPoint } = this.props;
+    const {
+      sets, leftSetParams, rightSetParams, checkPoint,
+    } = this.props;
     const checkedPoint = checkPoint(point, sets);
 
     const intersectWithLeftSet = isIntersectWithCircle(point, leftSetParams);
@@ -85,9 +92,14 @@ export default class Stage extends PureComponent {
       rightSet: checkedPoint === 1 && intersectWithRightSet && !intersectWithLeftSet,
       leftSet: checkedPoint === 0 && intersectWithLeftSet && !intersectWithRightSet,
       outside: checkedPoint === -1 && !intersectWithLeftSet && !intersectWithRightSet,
-    }
+    };
 
-    if (successWith.intersect || successWith.leftSet || successWith.rightSet || successWith.outside) {
+    if (
+      successWith.intersect
+      || successWith.leftSet
+      || successWith.rightSet
+      || successWith.outside
+    ) {
       bordersColor = Stage.SUCCESS_COLOR;
     }
 
@@ -96,23 +108,31 @@ export default class Stage extends PureComponent {
 
   render() {
     const {
-      leftSetParams, rightSetParams, points, scaleMultiplier,
+      leftSetParams,
+      rightSetParams,
+      points,
+      scaleMultiplier,
+      sets,
+      onCheckClick,
+      onTestPointsClick,
     } = this.props;
     return (
       <div>
         <Button href="/" isBackButton>
           Назад
         </Button>
+        <Button onClick={onTestPointsClick}>Установить тестовые точки</Button>
+        <Button onClick={onCheckClick}>Проверить</Button>
 
         <SetsStage
           forwardedRef={this.stage}
-          leftSetParams={leftSetParams}
-          rightSetParams={rightSetParams}
+          leftSetParams={{ ...leftSetParams, ...sets.leftSet }}
+          rightSetParams={{ ...rightSetParams, ...sets.rightSet }}
         >
           {points.map((point, index) => (
             <KonvaPoint
               key={index}
-              id={index}
+              id={point.id}
               color={point.color}
               bordersColor={this.getPointBorderColor(point)}
               shape={point.shape}

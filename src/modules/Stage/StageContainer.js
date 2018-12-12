@@ -2,8 +2,15 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import { getRandomHash } from 'utils';
 import * as builderStore from 'modules/Builder/store';
-import { generatePositions, setStartPositionForPoint, checkPoint } from './helpers/index';
+import { POINT_COLORS, POINT_SHAPES } from 'modules/Builder/constants';
+import {
+  generatePositions,
+  setStartPositionForPoint,
+  checkPoint,
+  checkPointHasIntersection,
+} from './helpers/index';
 import * as stageStore from './store';
 import * as Components from './components';
 
@@ -14,6 +21,21 @@ export class StageContainer extends Component {
     setPointPosition: PropTypes.func.isRequired,
     // selectors
     pointsPositions: PropTypes.arrayOf(PropTypes.object).isRequired,
+    sets: PropTypes.shape({
+      leftSet: PropTypes.object,
+      rightSet: PropTypes.object,
+    }),
+  };
+
+  static defaultProps = {
+    sets: {
+      leftSet: {
+        shape: 'circle',
+      },
+      rightSet: {
+        color: 'red',
+      },
+    },
   };
 
   static leftSetParams = {
@@ -31,44 +53,61 @@ export class StageContainer extends Component {
   constructor() {
     super();
     this.generatePointsPositions = this.generatePointsPositions.bind(this);
-    this.state = {
-      scaleMultiplier: 0.5,
-    };
+    this.onCheckClick = this.onCheckClick.bind(this);
+    this.onTestPointsClick = this.onTestPointsClick.bind(this);
   }
 
   componentDidMount = () => {
     // TODO update points position in store
-    const { setPointsPositions } = this.props;
-    setPointsPositions(this.generatePointsPositions());
+    const { setPointsPositions, points } = this.props;
+    setPointsPositions(this.generatePointsPositions(points));
   };
 
-  generatePointsPositions() {
-    const { props } = this;
-    const getRandomPoint = (isSuccess) => {
-      const shapeVal = Math.random();
-      const colorVal = Math.random();
-      return {
-        shape: shapeVal < 1 / 3 ? 'circle' : shapeVal < 2 / 3 ? 'square' : 'triangle',
-        color: colorVal < 1 / 3 ? 'red' : colorVal < 2 / 3 ? 'green' : 'blue',
-        isSuccess,
-      };
-    };
-    const freePoints = Array(7)
-      .fill(7)
-      .map(() => getRandomPoint(false));
-    const successPoints = Array(4)
-      .fill(4)
-      .map(() => getRandomPoint(true));
+  onCheckClick() {
+    const { pointsPositions } = this.props;
 
-    const points = [...freePoints, ...successPoints];
-    const sets = {
-      leftSet: {
-        shape: 'circle',
-      },
-      rightSet: {
-        color: 'red',
-      },
+    const errors = pointsPositions.reduce(
+      (base, point) => (checkPointHasIntersection(point, this.sets) ? base : base + 1),
+      0,
+    );
+
+    if (errors === 0) {
+      alert('Вы выполнили задание!');
+    } else {
+      alert(`У вас ошибки в количестве ${errors} шт.`);
+    }
+  }
+
+  onTestPointsClick() {
+    const { setPointsPositions } = this.props;
+    const points = [];
+
+    POINT_COLORS.forEach(color => POINT_SHAPES.forEach(shape => points.push({
+      id: getRandomHash(),
+      shape: shape.name,
+      color: color.name,
+      isSuccess: false,
+    })));
+
+    setPointsPositions(this.generatePointsPositions(points));
+  }
+
+  get pointsScaleMultiplier() {
+    const { pointsPositions } = this.props;
+
+    return 0.5 + 0.5 / pointsPositions.length;
+  }
+
+  get sets() {
+    const { sets } = this.props;
+    return {
+      leftSet: { ...sets.leftSet, ...StageContainer.leftSetParams },
+      rightSet: { ...sets.rightSet, ...StageContainer.rightSetParams },
     };
+  }
+
+  generatePointsPositions(points) {
+    const { sets } = this.props;
 
     const positions = generatePositions(
       StageContainer.leftSetParams,
@@ -79,16 +118,7 @@ export class StageContainer extends Component {
   }
 
   render() {
-    const { pointsPositions } = this.props;
-    const { scaleMultiplier } = this.state;
-    const sets = {
-      leftSet: {
-        shape: 'circle',
-      },
-      rightSet: {
-        color: 'red',
-      },
-    };
+    const { pointsPositions, sets, setPointPosition } = this.props;
 
     return (
       <Components.Stage
@@ -96,8 +126,11 @@ export class StageContainer extends Component {
         leftSetParams={StageContainer.leftSetParams}
         rightSetParams={StageContainer.rightSetParams}
         points={pointsPositions}
-        scaleMultiplier={scaleMultiplier}
+        scaleMultiplier={this.pointsScaleMultiplier}
         checkPoint={checkPoint}
+        onCheckClick={this.onCheckClick}
+        onTestPointsClick={this.onTestPointsClick}
+        setPointPosition={setPointPosition}
       />
     );
   }

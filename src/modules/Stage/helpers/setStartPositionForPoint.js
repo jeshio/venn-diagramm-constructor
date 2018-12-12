@@ -7,8 +7,7 @@ export default (point, sets, positions) => {
 
   const checkedPoint = checkPoint(point, sets);
 
-  if (true) {
-    // point.isSuccess) {
+  if (point.isSuccess) {
     if (checkedPoint === 2) {
       position = { ...positions.setsIntersect[randomIndex(positions.setsIntersect.length)] };
     } else if (checkedPoint === 0) {
